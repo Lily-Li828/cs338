@@ -27,15 +27,18 @@ Example: nmap -p 80 localhost
 6: Find all ports 
 nmap –p– <host name> 
 Example: nmap -p- localhost
+(conferred with: Jeff Ondich)
  
 7: Save page as file
 wget <webpage>
 Example: wget www.google.com
 (Saves the page as a file locally)
+(conferred with: Jeff Ondich)
  
 8: Get Response Header
 curl --head <webpage>
 Example: curl --head www.google.com
+(conferred with: Jeff Ondich)
  
 9: Get Request Header
 curl -vs <webpage> 2>&1 -o /dev/null | grep '>'
