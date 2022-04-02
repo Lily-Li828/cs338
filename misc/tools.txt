@@ -1,0 +1,44 @@
+Lily Li: Assignment 2
+
+1: Find IP of local
+ipconfig getifaddr en0 (for wireless connection)
+ipconfig getifaddr en1 (for Ethernet connection)
+(source: https://constellix.com/news/what-is-my-ip-address)
+ 
+2: Find IP with host name
+ping <hostname>
+(conferred with: Jeff Ondich)
+ 
+3: Find host name(s) with IP
+nslookup <IP address>
+Example: nslookup 172.217.1.100
+(conferred with: Jeff Ondich)
+ 
+4: Copy files between computers
+scp source_username@source_hostname:source_directory/source_file destination_username@destination_hostname:destination_directory/destination_filename
+Example: scp textFile.txt lil3@mantis.mathcs.carleton.edu:/Accounts/lil3
+(source: https://kb.iu.edu/d/agye)
+ 
+5: Scan a port
+nmap -p <port number> <host>
+Example: nmap -p 80 localhost
+(conferred with: Jeff Ondich)
+
+6: Find all ports 
+nmap –p– <host name> 
+Example: nmap -p- localhost
+ 
+7: Save page as file
+wget <webpage>
+Example: wget www.google.com
+(Saves the page as a file locally)
+ 
+8: Get Response Header
+curl --head <webpage>
+Example: curl --head www.google.com
+ 
+9: Get Request Header
+curl -vs <webpage> 2>&1 -o /dev/null | grep '>'
+Example: curl -vs www.google.com 2>&1 -o /dev/null | grep '>'
+(note: the GET request sent from your computer are in lines starting with the character ‘>’, thats why we can isolate them with grep)
+(source: https://www.baeldung.com/linux/curl-request-headers)
