@@ -1,0 +1,86 @@
+Author:Lily Li
+Conferred with: Jeff Ondich
+
+===== DAYTIME =====
+
+1:
+1	172.16.234.128		129.6.15.28	TCP	[SYN]...
+2	129.6.15.28		172.16.234.128	TCP	[SYN, ACK]...
+3	172.16.234.128		129.6.15.28	TCP	[ACK]...
+
+
+2:
+Client Source Port: 34426
+The client needs a port so it can specify the server to communicate with it on that port.
+
+
+3:
+4	129.6.15.28		172.16.234.128	DAYTIME	DAYTIME Response
+
+
+4:
+Aside from the Ethernet, IP, and TCP headers, the frame also contains the ​​application layer protocols, in this case it is DAYTIME. The frame content is as follows:
+
+Daytime Protocol
+	Type: Response
+	Daytime: \n59672 22-04-03 20:39:50 50 0 0 823.8 UTC(NIST)* \n
+
+The frame content contains:
+
+#The first line:  type of the frame, which in this case is ‘Response’.
+
+#The second line is in the format: MJD YY-MM-DD HH:MM:SS DST LS H Adv. 
+MJD is Modified Julian Day, which gives the number of days since midnight on November 17, 1858
+YY-MM-DD HH:MM:SS is the UTC date and time, easily understood by humans.
+DST stands for Daylight Saving Time, which give advance notice of the transitions to and from daylight saving time
+LS stands for Leap Second, which gives notice of transitions to and from the imminent
+occurrence of a leap second
+H estimates time server’s health, value of 0 indicating fully healthy (not prone to errors)
+Adv is  time advance in milliseconds, which is to compensate the time it takes to travel through the internet.
+
+(Source: Jeff Ondich, https://tf.nist.gov/general/pdf/1046.pdf)
+
+
+5:
+[SYN] is a synchronization packet, which is a request for initiating  a connection. With this packet, the sequence number and the source port is sent.
+
+
+6:
+[ACK] is an acknowledgement packet, which is an acknowledgement of the request. With this packet, the received sequence number is sent back for confirmation.
+
+
+7:
+[FIN] is a finished packet, which is an initiation for termination of the connection. When an [ACK] is sent back, the closure is acknowledged and connection is closed.
+
+
+8:
+The client initiates the closing of the connection.
+Because in frame 5, the client sends the [FIN,ACK] flag to the server.
+
+
+====== HTTP ======
+
+1: 4 TCP controls were in my case:
+1	172.16.234.128		45.79.89.123	TCP	74 49428 -> 80 [SYN]...
+2	172.16.234.128		45.79.89.123	TCP	74 52050 -> 443 [SYN]...
+17	172.16.234.128		45.79.89.123	TCP	74 49430 -> 80 [SYN]...
+30	172.16.234.128		45.79.89.123	TCP	74 49432 -> 80 [SYN]...
+
+
+2:
+Yes
+22	172.16.234.128		45.79.89.123	HTTP	404 GET /index.html HTTP/1.1
+
+
+3:
+Yes
+26	172.16.234.128		45.79.89.123	HTTP	373 GET /jeff_square_head.jpg HTTP/1.1
+
+
+===== QUESTIONS =====
+
+1: What are the TLSv1.2 protocols doing: the Encrypted Alert, Client Key Exchange etc…
+
+2: Can we use wireshark to detect malware on our computer ( I know we are using it on a virtual machine) but is there a way to help monitor that on our actual computer?
+
+
