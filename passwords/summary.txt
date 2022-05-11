@@ -1,0 +1,88 @@
+Author:Lily Li
+
+Part 1
+Total time: 1m 38.20s
+Number of hashes computed: 267733
+Passwords cracked: 2793
+Time per hash computed: 0.0003705s
+Time per password cracked: 0.035517s
+Passwords cracked per number of hashes computed: 0.0104320
+
+
+Part 2
+Total time: 195146.74s (3252.44567 minute)
+Number of hashes computed: 2647*267733 = 708689251
+Passwords cracked: 16
+Time per hash computed: 0.00027536187
+Time per password cracked: 12196s
+Passwords cracked per number of hashes computed: 0.00008198989
+
+
+Part 3
+Total time: 13m 51.09s
+Number of hashes computed: 267733*2805 = 708689251
+Passwords cracked: 2804
+Time per hash computed: 0.0000011s
+Time per password cracked: 0.29639s
+Passwords cracked per number of hashes computed: 0.00000373373
+
+
+Analysis:
+
+1:
+
+Yes, there are changes
+
+Interestingly, time per hash computed decreased from phase 1 to 3 to approximately 1/300, despite having to compute more combinations.
+Maybe this is due to the python language itself, that computing many hashes based on one salt runs faster. or maybe it’s how the for loop/buffer …. 
+
+The time per hash between phase 1 and 2 is not obvious (phase 2 was slightly faster). This may be due to the fact that both phases are continuously computing hashes drastically different (no stable salt in front)
+
+
+2:
+
+Yes, there are changes
+
+Time per password crack from Phase 1 to Phase 3 increased by approximately 10th fold.
+The increase is due to there being similar numbers of passwords in total. There are way more combinations to consider in phase 2 and phase 3 then phase 1.
+Although the combination needs to be considered increases way more than 10 times from phase 1 to phase 3, somehow it took less time to check a new hash in phase 3 than 1, therefore so.
+
+As for the time for password: it sky-rocketed in phase 2 (approximately 100k times). It is understandable as there is still 2000-ish passwords but all of a sudden there is 2647 times more combinations to compute, and they all come from different lists. So I believe python (and the code, or the way the loop is written) itself also plays a role in why it became so slow.
+
+
+
+3: Memory for precomputed hashes
+
+For Phase 1: 
+21418640 bytes
+We would only need to store all the words and their hash accordingly.
+There are 267733 words, which will take us (32+16+32)*267733 = 21418640 bytes
+
+For Phase 2: 
+5734476743120 bytes
+There are 267733 words, which means there are 267733*267733 = 71680959289 combinations to concatenate 2 words. 
+With the assumption, it will take us (32+16+32)*71680959289 = 5734476743120 bytes
+
+For Phase 3: 
+6021200580276 bytes or 96591976241037312 bytes depending on if we know the salt.
+In the homework, we get a known 8-digit hexadecimal salt (4 bytes) in addition for each user. 
+We will also need to store the salt.
+There are 267733 words, 267733 possible salts (we will assume each salt is unique). 
+We would need to compute the hash of the concatenation for each salt with every word to make the table.
+Therefore, it will take use 267733*267733*(16+4+32+32) = 6021200580276 bytes
+
+However, if we didn’t know the salt and had to guess from all 8-digit hexadecimal numbers:
+We will have 4294967296*267733 = 1149904479059968 possible combinations of passwords. 
+Which will take us 
+1149904479059968* (16+4+32+32) = 96,591,976,241,037,312 bytes
+
+
+4: Reasons we should store password hashes:
+
+1: Hashes are one-way functions, non-reversibile, that is, if someone gets your password hash they couldn’t figure out your plaintext password unless they try every single possible hash out brute force, which will take forever.
+
+2: Plain password storage may give away your personal information (Information Disclosure). For instance, many people put their birthdays/names in their passwords. Whereas hashed passwords look like random characters, and doesn’t give away personal information. 
+
+3: Hashes passwords are still unique. That is, different passwords will produce unique hashes. Therefore, you will still be able to identify/confirm a unique password with its hashed version.
+
+4: By adding a salt and hashing it: even if you use the same password for various platforms, it will not seem identical. That is, let's say you use the same password for facebook and twitter. Even if someone else knows your password for facebook, he cannot just tell by looking at the hash with salt that it is the exact same password as twitter.
